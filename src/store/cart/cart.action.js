@@ -1,40 +1,30 @@
 import { createAction } from '../../utils/reducer/reducer.utils';
 import { CART_ACTION_TYPES } from './cart.types';
 
-const addCartItem = (cartItems, cartItem) => {
-  const foundCartItem = cartItems.find((item) => item.id === cartItem.id);
+const addCartItem = (cartItems, productToAdd) => {
+  const existingCartItem = cartItems.find((cartItem) => cartItem.id === productToAdd.id);
 
-  if (foundCartItem) {
-    const newCartItems = [...cartItems];
-
-    newCartItems.forEach((item) => {
-      if (item.id === foundCartItem.id) {
-        item.quantity++;
-      }
-    });
-
-    return newCartItems;
+  if (existingCartItem) {
+    return cartItems.map((cartItem) =>
+      cartItem.id === productToAdd.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+    );
   }
 
-  return [...cartItems, { ...cartItem, quantity: 1 }];
+  return [...cartItems, { ...productToAdd, quantity: 1 }];
 };
 
-const removeItem = (cartItems, cartItem) => {
-  const foundCartItem = cartItems.find((item) => item.id === cartItem.id);
+const removeItem = (cartItems, cartItemToRemove) => {
+  const existingCartItem = cartItems.find((cartItem) => cartItem.id === cartItemToRemove.id);
 
-  if (foundCartItem?.quantity > 1) {
-    const newCartItems = [...cartItems];
-
-    newCartItems.forEach((item) => {
-      if (item.id === foundCartItem.id) {
-        item.quantity--;
-      }
-    });
-
-    return newCartItems;
+  if (existingCartItem.quantity === 1) {
+    return cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id);
   }
 
-  return cartItems.filter((item) => item.id !== cartItem.id);
+  return cartItems.map((cartItem) =>
+    cartItem.id === cartItemToRemove.id
+      ? { ...cartItem, quantity: cartItem.quantity - 1 }
+      : cartItem
+  );
 };
 
 const clearItem = (cartItems, cartItem) => {
