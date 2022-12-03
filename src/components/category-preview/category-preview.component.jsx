@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+
 import ProductCard from '../product-card/product-card.component';
 import { CategoryPreviewContainer, Preview, Title } from './category-preview.styles';
 
